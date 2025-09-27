@@ -33,7 +33,7 @@ class Map:
         print(num_line)
 
 
-    def add_ship(self, ship, y, x):
+    def add_ship(self, ship, y, x, orientation):
         if ship in self.ships:
             print("This ship already added!")
             return
@@ -48,13 +48,13 @@ class Map:
 
         inc_x = 0
         inc_y = 0
-        if ship.orientation == Orientation.HORIZONTAL:
+        if orientation == Orientation.HORIZONTAL:
             inc_x = 1
             max_x = x + (len(ship.parts) - 1)
             if max_x >= self.width:
                 print("Very long ship!")
                 return
-        elif ship.orientation == Orientation.VERTICAL:
+        elif orientation == Orientation.VERTICAL:
             inc_y = 1
             max_y = y + (len(ship.parts) - 1)
             if max_y >= self.height:
@@ -73,4 +73,5 @@ class Map:
             _x += inc_x
 
         self.ships.append(ship)
+        ship.orientation = orientation
 

@@ -33,7 +33,7 @@ class Map:
         print(num_line)
 
 
-    def add_ship(self, ship, y, x, orientation):
+    def add_ship(self, ship, y, x, orientation, ship_gap):
         if ship in self.ships:
             print("This ship already added!")
             return
@@ -61,16 +61,46 @@ class Map:
                 print("Very long ship!")
                 return
 
+        near_cells_coords = [
+            (-1, -1),
+            (-1, 0),
+            (-1, 1),
+            (0, 1),
+            (1, 1),
+            (1, 0),
+            (1, -1),
+            (0, -1)
+        ]
+
         _y = y
         _x = x
+        ship_coords = []
         for part in ship.parts:
             if self.map[_y][_x].content is not None:
                 print("Busy cell!")
                 return
 
-            self.map[_y][_x].content = part
+            if ship_gap:
+                for coord in near_cells_coords:
+                    near_y = _y + coord[0]
+                    if (near_y < 0) or (near_y >= self.height):
+                        continue
+                    near_x = _x + coord[1]
+                    if (x < 0) or (x >= self.width):
+                        continue
+
+                    if self.map[near_y][near_x].content is not None:
+                        print("Near cell is busy!")
+                        return
+
+            ship_coords.append((_y, _x))
             _y += inc_y
             _x += inc_x
+
+        for i in range(len(ship_coords)):
+            _y = ship_coords[i][0]
+            _x = ship_coords[i][1]
+            self.map[_y][_x].content = ship.parts[i]
 
         self.ships.append(ship)
         ship.orientation = orientation

@@ -36,15 +36,15 @@ class Map:
     def add_ship(self, ship, y, x, orientation, ship_gap):
         if ship in self.ships:
             print("This ship already added!")
-            return
+            return False
 
         if (y < 0) or (y >= self.height):
             print("Invalid position 'y'!", y)
-            return
+            return False
 
         if (x < 0) or (x >= self.width):
             print("Invalid position 'x'!", x)
-            return
+            return False
 
         inc_x = 0
         inc_y = 0
@@ -53,13 +53,13 @@ class Map:
             max_x = x + (len(ship.parts) - 1)
             if max_x >= self.width:
                 print("Very long ship!")
-                return
+                return False
         elif orientation == Orientation.VERTICAL:
             inc_y = 1
             max_y = y + (len(ship.parts) - 1)
             if max_y >= self.height:
                 print("Very long ship!")
-                return
+                return False
 
         near_cells_coords = [
             (-1, -1),
@@ -78,7 +78,7 @@ class Map:
         for part in ship.parts:
             if self.map[_y][_x].content is not None:
                 print("Busy cell!")
-                return
+                return False
 
             if ship_gap:
                 for coord in near_cells_coords:
@@ -86,12 +86,12 @@ class Map:
                     if (near_y < 0) or (near_y >= self.height):
                         continue
                     near_x = _x + coord[1]
-                    if (x < 0) or (x >= self.width):
+                    if (near_x < 0) or (near_x >= self.width):
                         continue
 
                     if self.map[near_y][near_x].content is not None:
                         print("Near cell is busy!")
-                        return
+                        return False
 
             ship_coords.append((_y, _x))
             _y += inc_y
@@ -104,4 +104,5 @@ class Map:
 
         self.ships.append(ship)
         ship.orientation = orientation
+        return True
 

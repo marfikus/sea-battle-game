@@ -1,12 +1,14 @@
 
 from player import Player
+from player_type import PlayerType
 
 
 class Game:
     def __init__(self):
-        player1 = Player()
-        player2 = Player()
+        self.player1 = Player(type=PlayerType.HUMAN)
+        self.player2 = Player(type=PlayerType.COMPUTER)
 
 
     def start(self):
-        pass
+        self.player1.own_map.show()
+        self.player2.own_map.show()

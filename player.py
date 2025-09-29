@@ -6,7 +6,8 @@ from orientation import Orientation
 
 
 class Player:
-    def __init__(self):
+    def __init__(self, type):
+        self.type = type
         self.own_map = self.init_own_map()
         self.opponent_map = Map()
 

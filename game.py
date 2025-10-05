@@ -20,7 +20,8 @@ class Game:
         self.player2.own_map.show()
 
         player = random.choice(list(self.opponents))
-        self.opponents[player].make_step()
+        print("first step make:", player.type)
+        player.make_step()
 
 
     def send(self, player, action_type, data=None):

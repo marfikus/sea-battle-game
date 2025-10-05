@@ -4,6 +4,8 @@ from map import Map
 from ship import Ship
 from orientation import Orientation
 from player_type import PlayerType
+from action_type import ActionType
+from step_data import StepData
 
 
 class Player:
@@ -27,8 +29,8 @@ class Player:
         max_attempts = 100
         for ship in ships:
             for attempt in range(max_attempts):
-                y = random.randint(0, m.height)
-                x = random.randint(0, m.width)
+                y = random.randint(0, m.height - 1)
+                x = random.randint(0, m.width - 1)
                 orientation = random.choice(list(Orientation))
 
                 if m.add_ship(ship, y, x, orientation, True):
@@ -40,14 +42,17 @@ class Player:
 
 
     def make_step(self):
+        y = None
+        x = None
         if self.type == PlayerType.HUMAN:
             pass
         elif self.type == PlayerType.COMPUTER:
-            y = random.randint(0, self.opponent_map.height)
-            x = random.randint(0, self.opponent_map.width)
+            y = random.randint(0, self.opponent_map.height - 1)
+            x = random.randint(0, self.opponent_map.width - 1)
 
 
-        # self.game.send(self, action_type, data)
+        print(y, x)
+        self.game.send(self, ActionType.STEP_REQUEST, StepData(y, x))
 
 
     def step_request(self, data):

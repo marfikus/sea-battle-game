@@ -47,7 +47,7 @@ class Player:
             x = random.randint(0, self.opponent_map.width)
 
 
-        self.game.send(self, action_type, data)
+        # self.game.send(self, action_type, data)
 
 
     def step_request(self, data):

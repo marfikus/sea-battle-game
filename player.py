@@ -3,11 +3,13 @@ import random
 from map import Map
 from ship import Ship
 from orientation import Orientation
+from player_type import PlayerType
 
 
 class Player:
-    def __init__(self, type):
+    def __init__(self, type, game):
         self.type = type
+        self.game = game
         self.own_map = self.init_own_map()
         self.opponent_map = Map()
 
@@ -37,6 +39,23 @@ class Player:
         return m
 
 
-    def shoot(self):
+    def make_step(self):
+        if self.type == PlayerType.HUMAN:
+            pass
+        elif self.type == PlayerType.COMPUTER:
+            y = random.randint(0, self.opponent_map.height)
+            x = random.randint(0, self.opponent_map.width)
+
+
+        self.game.send(self, action_type, data)
+
+
+    def step_request(self, data):
         pass
+
+
+    def step_response(self, data):
+        pass
+
+
 

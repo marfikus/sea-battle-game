@@ -41,15 +41,44 @@ class Player:
         return m
 
 
+    def input_coordinate(self, axis, min_value, max_value):
+        while True:
+            c = input(f"Enter '{axis}' coordinate please: ")
+            try:
+                c = int(c)
+            except ValueError:
+                print("Incorrect value!")
+                continue
+
+            if min_value <= c <= max_value:
+                break
+            else:
+                print(f"Value is out of range: {min_value}...{max_value}")
+
+        return c
+
+
     def make_step(self):
         y = None
         x = None
         if self.type == PlayerType.HUMAN:
-            pass
-        elif self.type == PlayerType.COMPUTER:
-            y = random.randint(0, self.opponent_map.height - 1)
-            x = random.randint(0, self.opponent_map.width - 1)
+            #cli version
+            while True:
+                y = self.input_coordinate("Y", 0, self.opponent_map.height - 1)
+                x = self.input_coordinate("X", 0, self.opponent_map.width - 1)
+                content = self.opponent_map.map[y][x].content
+                if content is None:
+                    break
+                else:
+                    print("This point is already used!")
 
+        elif self.type == PlayerType.COMPUTER:
+            while True:
+                y = random.randint(0, self.opponent_map.height - 1)
+                x = random.randint(0, self.opponent_map.width - 1)
+                content = self.opponent_map.map[y][x].content
+                if content is None:
+                    break
 
         print(y, x)
         self.game.send(self, ActionType.STEP_REQUEST, StepData(y, x))

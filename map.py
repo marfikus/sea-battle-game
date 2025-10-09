@@ -25,7 +25,10 @@ class Map:
                 if content is None:
                     print("   ", end="")
                 elif isinstance(content, ShipPart):
-                    print(" s ", end="")
+                    if content.alive:
+                        print(" s ", end="")
+                    else:
+                        print(" x ", end="")
                 elif isinstance(content, Miss):
                     print(" o ", end="")
             print("|", y)

@@ -6,6 +6,9 @@ from orientation import Orientation
 from player_type import PlayerType
 from action_type import ActionType
 from step_data import StepData
+from step_response_type import StepResponseType
+from miss import Miss
+from ship_part import ShipPart
 
 
 class Player:
@@ -85,7 +88,44 @@ class Player:
 
 
     def step_request(self, data):
-        pass
+        print(self.type, data.coords)
+        y = data.coords["y"]
+        x = data.coords["x"]
+        content = self.own_map.map[y][x].content
+        response_type = None
+
+        if content is None:
+            self.own_map.map[y][x].content = Miss()
+            response_type = StepResponseType.AWAY
+            print("Away!")
+
+        elif isinstance(content, ShipPart):
+            if content.alive:
+                content.kill()
+
+                if content.ship.alive:
+                    # wounded
+                    response_type = StepResponseType.WOUNDED
+                    print("Wounded!")
+                else:
+                    # killed
+                    response_type = StepResponseType.KILLED
+                    print("Killed!")
+            else:
+                # repeated
+                response_type = StepResponseType.REPEATED
+                print("Repeated!")
+
+        elif isinstance(content, Miss):
+            # repeated
+            response_type = StepResponseType.REPEATED
+            print("Repeated!")
+
+        self.game.send(
+            self, 
+            ActionType.STEP_RESPONSE, 
+            StepData(y, x, response_type)
+        )
 
 
     def step_response(self, data):

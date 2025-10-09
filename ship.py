@@ -10,3 +10,11 @@ class Ship:
 
         for _ in range(parts_num):
             self.parts.append(ShipPart(self))
+
+
+    def update_state(self):
+        for part in self.parts:
+            if part.alive:
+                return
+        self.alive = False
+

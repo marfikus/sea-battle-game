@@ -9,7 +9,7 @@ class Ship:
         self.alive = True
 
         for _ in range(parts_num):
-            self.parts.append(ShipPart(self))
+            self.parts.append(ShipPart(ship=self))
 
 
     def update_state(self):

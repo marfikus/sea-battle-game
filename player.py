@@ -9,6 +9,7 @@ from step_data import StepData
 from step_response_type import StepResponseType
 from miss import Miss
 from ship_part import ShipPart
+from wounded import Wounded
 
 
 class Player:
@@ -62,6 +63,10 @@ class Player:
 
 
     def make_step(self):
+        print("make step by", self.type)
+        self.own_map.show()
+        self.opponent_map.show()
+
         y = None
         x = None
         if self.type == PlayerType.HUMAN:
@@ -83,16 +88,17 @@ class Player:
                 if content is None:
                     break
 
-        print(y, x)
+        # print(y, x)
         self.game.send(self, ActionType.STEP_REQUEST, StepData(y, x))
 
 
     def step_request(self, data):
-        print(self.type, data.coords)
+        print("step request to", self.type, data.coords)
         y = data.coords["y"]
         x = data.coords["x"]
         content = self.own_map.map[y][x].content
         response_type = None
+        killed_ship = None
 
         if content is None:
             self.own_map.map[y][x].content = Miss()
@@ -110,6 +116,7 @@ class Player:
                 else:
                     # killed
                     response_type = StepResponseType.KILLED
+                    killed_ship = content.ship
                     print("Killed!")
             else:
                 # repeated
@@ -124,12 +131,27 @@ class Player:
         self.game.send(
             self, 
             ActionType.STEP_RESPONSE, 
-            StepData(y, x, response_type)
+            StepData(y, x, response_type, killed_ship)
         )
 
 
     def step_response(self, data):
-        pass
+        print("step response to", self.type, data.coords, data.step_response_type)
+        y = data.coords["y"]
+        x = data.coords["x"]
+        response = data.step_response_type
+
+        if response == StepResponseType.AWAY:
+            self.opponent_map.map[y][x].content = Miss()
+            self.game.send(self, ActionType.MAKE_STEP)
+        elif response == StepResponseType.WOUNDED:
+            self.opponent_map.map[y][x].content = Wounded()
+            self.make_step()
+        elif response == StepResponseType.KILLED:
+            # добавляем убитый корабль на карту
+            pass
+        elif response == StepResponseType.REPEATED:
+            pass
 
 
 

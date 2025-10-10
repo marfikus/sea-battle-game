@@ -2,6 +2,7 @@
 from cell import Cell
 from ship_part import ShipPart
 from miss import Miss
+from wounded import Wounded
 from orientation import Orientation
 
 
@@ -27,8 +28,12 @@ class Map:
                 elif isinstance(content, ShipPart):
                     if content.alive:
                         print(" s ", end="")
+                    elif content.ship.alive:
+                        print(" w ", end="")
                     else:
                         print(" x ", end="")
+                elif isinstance(content, Wounded):
+                    print(" w ", end="")
                 elif isinstance(content, Miss):
                     print(" o ", end="")
             print("|", y)

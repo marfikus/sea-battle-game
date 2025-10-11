@@ -33,3 +33,9 @@ class Game:
             self.opponents[player].step_response(data)
 
 
+    def end(self, player):
+        print("Game over! Winner is", player.type)
+        # надо сообщить противнику тоже...
+        # еще вариант когда кто-то сдаётся... наверное добавить в ActionType...
+
+

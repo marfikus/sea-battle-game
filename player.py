@@ -149,9 +149,30 @@ class Player:
             self.make_step()
         elif response == StepResponseType.KILLED:
             # добавляем убитый корабль на карту
-            pass
+            ship = Ship(alive=False)
+            ship.orientation = data.killed_ship.orientation
+            for p in data.killed_ship.parts:
+                part = ShipPart(ship, False, p.map_y, p.map_x)
+                ship.parts.append(part)
+                self.opponent_map.map[p.map_y][p.map_x].content = part
+            self.opponent_map.ships.append(ship)
+
+            # проверить оставшиеся корабли противника, возможен конец игры
+            if self.opponent_has_alive_ships():
+                self.make_step()
+            else:
+                self.game.end(self)
+            
         elif response == StepResponseType.REPEATED:
             pass
+
+
+    def opponent_has_alive_ships(self):
+        # print("opponent ships:", len(self.opponent_map.ships))
+        # print("own ships:", len(self.own_map.ships))
+        if len(self.opponent_map.ships) < len(self.own_map.ships):
+            return True
+        return False
 
 
 

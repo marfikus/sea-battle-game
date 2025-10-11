@@ -109,6 +109,8 @@ class Map:
             _y = ship_coords[i][0]
             _x = ship_coords[i][1]
             self.map[_y][_x].content = ship.parts[i]
+            ship.parts[i].map_y = _y
+            ship.parts[i].map_x = _x
 
         self.ships.append(ship)
         ship.orientation = orientation

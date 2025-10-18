@@ -1,18 +1,29 @@
 
 import random
+from settings import Settings
+from main_screen import MainScreen
 from player import Player
 from player_type import PlayerType
 from action_type import ActionType
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, gui):
+        self.settings = Settings()
+
         self.player1 = Player(PlayerType.HUMAN, self)
         self.player2 = Player(PlayerType.COMPUTER, self)
         self.opponents = {
             self.player1: self.player2,
             self.player2: self.player1,
         }
+        self.game_is_active = False
+
+        self.gui = gui
+        self.main_screen = None
+        if self.gui:
+            self.main_screen = MainScreen(self.settings, self, self.player1)
+            self.main_screen.start_gui()
 
 
     def start(self):

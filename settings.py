@@ -7,10 +7,11 @@ class Settings:
         self.colors = { # цвета, используемые в интерфейсе
             "canvas_bg": "gray70", # фон канваса
             "canvas_lines": "gray55", # 
+            # "cell_bg": "gray70", # 
+            # "active_cell_bg": "gray55", # 
             "cell_bg": {
-                "default": "#cccccc", # фон обычной ячейки
-                "hided": "#aaaaaa", # фон скрытой ячейки
-                "selected": "#777777" # фон выбранной ячейки
+                "default": "gray70", # 
+                "selected": "gray55", # 
             },
         }
 

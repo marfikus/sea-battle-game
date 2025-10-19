@@ -23,7 +23,6 @@ class MainScreen:
 
         self.width = None
         self.height = None
-        self.game_field = None
         self.c = None
         self.selected_cell = None
 
@@ -64,9 +63,15 @@ class MainScreen:
         y1 = map_margin
         y2 = y1 + map_size
         self.c.create_rectangle(x1, y1, x2, y2)
+        self.player.own_map.screen_coords = {
+            "x1": x1, "y1": y1, "x2": x2, "y2": y2
+        }
         x1 = x2 + maps_gap
         x2 = x1 + map_size
         self.c.create_rectangle(x1, y1, x2, y2)
+        self.player.opponent_map.screen_coords = {
+            "x1": x1, "y1": y1, "x2": x2, "y2": y2
+        }
 
         x1 = map_margin + map_size + maps_gap + 1
         x2 = x1 + self.settings.cell_size - 1
@@ -74,11 +79,12 @@ class MainScreen:
         y2 = y1 + self.settings.cell_size - 1
         for y in range(self.settings.map_dim):
             for x in range(self.settings.map_dim):
-                self.c.create_rectangle(x1, y1, x2, y2, 
-                    fill="gray70", 
-                    activefill="gray30",
+                rect = self.c.create_rectangle(x1, y1, x2, y2, 
+                    fill=self.settings.colors["cell_bg"]["default"], 
+                    # activefill=self.settings.colors["cell_bg"]["active"],
                     width=0
                 )
+                self.player.opponent_map.map[y][x].screen_block = rect
                 x1 += self.settings.cell_size
                 x2 = x1 + self.settings.cell_size - 1
 
@@ -89,6 +95,7 @@ class MainScreen:
 
 
 
+        self.c.bind("<Button-1>", self.click_cell)
         # self.game_is_active = True
         self.root.mainloop()
 
@@ -99,35 +106,45 @@ class MainScreen:
 
 
     def click_cell(self, event):
-        for cell in self.game_field.hided_cells:
-            rect = self.game_field.hided_cells[cell]["screen_block"]["rect"]
+        map_coords = self.player.opponent_map.screen_coords
+        if event.x < map_coords["x1"] or event.x > map_coords["x2"] or \
+         event.y < map_coords["y1"] or event.y > map_coords["y2"]:
+            return
+
+        # print(event)
+
+        if self.selected_cell is not None:
+            rect = self.selected_cell.screen_block
             coords = self.c.coords(rect)
-            if (coords[0] <= event.x <= coords[2]) and (coords[1] <= event.y <= coords[3]):
-                # print(self.game_field.hided_cells[cell])
-                self.selected_cell = cell
-                self.c.itemconfig(rect, fill=self.settings.colors["cell_bg"]["selected"])
-                self.input_screen.show(
-                    self.game_field.hided_cells[cell]["input_value"]
+            if (coords[0] <= event.x <= coords[2]) and \
+             (coords[1] <= event.y <= coords[3]):
+                self.c.itemconfig(rect, 
+                    fill=self.settings.colors["cell_bg"]["default"]
                 )
-                break
+                self.selected_cell = None
+                return
 
+        for y in range(self.settings.map_dim):
+            for x in range(self.settings.map_dim):
+                cell = self.player.opponent_map.map[y][x]
+                if cell.content is not None:
+                    continue
+                rect = cell.screen_block
+                coords = self.c.coords(rect)
+                if (coords[0] <= event.x <= coords[2]) and \
+                 (coords[1] <= event.y <= coords[3]):
+                    print(y, x)
+                    if self.selected_cell is not None:
+                        self.c.itemconfig(self.selected_cell.screen_block, 
+                            fill=self.settings.colors["cell_bg"]["default"]
+                        )
 
-    def change_cell_value(self, digit):
-        rect = self.game_field.hided_cells[self.selected_cell]["screen_block"]["rect"]
-        self.c.itemconfig(rect, fill=self.settings.colors["cell_bg"]["hided"])
-
-        if digit is not None:
-            text = self.game_field.hided_cells[self.selected_cell]["screen_block"]["text"]
-
-            if digit == 0: # click Clear
-                self.c.itemconfig(text, text="")
-            else: # click digit
-                self.c.itemconfig(text, text=digit)
-
-            self.game_field.hided_cells[self.selected_cell]["input_value"] = digit
-            y, x = self.game_field.hided_cells[self.selected_cell]["matrix_coords"]
-            self.game_field.matrix[y][x] = digit
-
-        if self.game_field.is_solved():
-            print("Game solved!")
+                    self.selected_cell = cell
+                    self.c.itemconfig(rect, 
+                        fill=self.settings.colors["cell_bg"]["selected"]
+                    )
+                    # self.input_screen.show(
+                    #     self.game_field.hided_cells[cell]["input_value"]
+                    # )
+                    break
 

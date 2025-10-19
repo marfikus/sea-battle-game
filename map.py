@@ -10,8 +10,9 @@ class Map:
     def __init__(self, w=10, h=10):
         self.width = w
         self.height = h
-        self.map = [[Cell() for _ in range(self.width)] for _ in range(self.height)]
+        self.map = [[Cell(y, x) for x in range(self.width)] for y in range(self.height)]
         self.ships = []
+        self.screen_coords = None
 
 
     def show(self):

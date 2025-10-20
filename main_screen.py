@@ -73,26 +73,40 @@ class MainScreen:
             "x1": x1, "y1": y1, "x2": x2, "y2": y2
         }
 
-        x1 = map_margin + map_size + maps_gap + 1
-        x2 = x1 + self.settings.cell_size - 1
+        # for own map:
+        m1_x1 = map_margin + 1
+        m1_x2 = m1_x1 + self.settings.cell_size - 1
+        # for opponent map:
+        m2_x1 = map_margin + map_size + maps_gap + 1
+        m2_x2 = m2_x1 + self.settings.cell_size - 1
+
         y1 = map_margin + 1
         y2 = y1 + self.settings.cell_size - 1
         for y in range(self.settings.map_dim):
             for x in range(self.settings.map_dim):
-                rect = self.c.create_rectangle(x1, y1, x2, y2, 
+                rect = self.c.create_rectangle(m1_x1, y1, m1_x2, y2, 
                     fill=self.settings.colors["cell_bg"]["default"], 
-                    # activefill=self.settings.colors["cell_bg"]["active"],
+                    width=0
+                )
+                self.player.own_map.map[y][x].screen_block = rect
+                m1_x1 += self.settings.cell_size
+                m1_x2 = m1_x1 + self.settings.cell_size - 1
+
+                rect = self.c.create_rectangle(m2_x1, y1, m2_x2, y2, 
+                    fill=self.settings.colors["cell_bg"]["default"], 
                     width=0
                 )
                 self.player.opponent_map.map[y][x].screen_block = rect
-                x1 += self.settings.cell_size
-                x2 = x1 + self.settings.cell_size - 1
+                m2_x1 += self.settings.cell_size
+                m2_x2 = m2_x1 + self.settings.cell_size - 1
 
-            x1 = map_margin + map_size + maps_gap + 1
-            x2 = x1 + self.settings.cell_size - 1
+            m1_x1 = map_margin + 1
+            m1_x2 = m1_x1 + self.settings.cell_size - 1
+
+            m2_x1 = map_margin + map_size + maps_gap + 1
+            m2_x2 = m2_x1 + self.settings.cell_size - 1
             y1 += self.settings.cell_size
             y2 = y1 + self.settings.cell_size - 1
-
 
 
         self.c.bind("<Button-1>", self.click_cell)
@@ -143,8 +157,6 @@ class MainScreen:
                     self.c.itemconfig(rect, 
                         fill=self.settings.colors["cell_bg"]["selected"]
                     )
-                    # self.input_screen.show(
-                    #     self.game_field.hided_cells[cell]["input_value"]
-                    # )
+                    
                     break
 

@@ -7,6 +7,7 @@ class Ship:
         self.parts = []
         self.orientation = None
         self.alive = alive
+        self.screen_coords = None
 
         for _ in range(parts_num):
             self.parts.append(ShipPart(ship=self))

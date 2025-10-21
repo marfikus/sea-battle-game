@@ -44,6 +44,7 @@ class MainScreen:
         )
         self.c.pack()
 
+        # add lines
         x = lines_margin
         y = lines_margin
         while x < self.width:
@@ -58,6 +59,7 @@ class MainScreen:
             )
             x += self.settings.cell_size
 
+        # add maps borders
         x1 = map_margin
         x2 = x1 + map_size
         y1 = map_margin
@@ -73,6 +75,7 @@ class MainScreen:
             "x1": x1, "y1": y1, "x2": x2, "y2": y2
         }
 
+        # add cells borders
         # for own map:
         m1_x1 = map_margin + 1
         m1_x2 = m1_x1 + self.settings.cell_size - 1
@@ -107,6 +110,31 @@ class MainScreen:
             m2_x2 = m2_x1 + self.settings.cell_size - 1
             y1 += self.settings.cell_size
             y2 = y1 + self.settings.cell_size - 1
+
+        # add ships to own map
+        for ship in self.player.own_map.ships:
+            x = ship.parts[0].map_x
+            y = ship.parts[0].map_y
+            rect = self.player.own_map.map[y][x].screen_block
+            coords = self.c.coords(rect)
+            x1 = coords[0] - 1
+            y1 = coords[1] - 1
+
+            x = ship.parts[-1].map_x
+            y = ship.parts[-1].map_y
+            rect = self.player.own_map.map[y][x].screen_block
+            coords = self.c.coords(rect)
+            x2 = coords[2]
+            y2 = coords[3]
+
+            self.c.create_rectangle(x1, y1, x2, y2,
+                # fill="gray60",
+                # width=1
+            )
+            ship.screen_coords = {
+                "x1": x1, "y1": y1, "x2": x2, "y2": y2
+            }
+            
 
 
         self.c.bind("<Button-1>", self.click_cell)
@@ -147,7 +175,7 @@ class MainScreen:
                 coords = self.c.coords(rect)
                 if (coords[0] <= event.x <= coords[2]) and \
                  (coords[1] <= event.y <= coords[3]):
-                    print(y, x)
+                    # print(y, x)
                     if self.selected_cell is not None:
                         self.c.itemconfig(self.selected_cell.screen_block, 
                             fill=self.settings.colors["cell_bg"]["default"]
@@ -157,6 +185,6 @@ class MainScreen:
                     self.c.itemconfig(rect, 
                         fill=self.settings.colors["cell_bg"]["selected"]
                     )
-                    
+
                     break
 

@@ -15,5 +15,7 @@ class Settings:
             },
         }
 
-
+        self.language = "RU"
+        self.LETTERS_EN = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        self.LETTERS_RU = "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
 

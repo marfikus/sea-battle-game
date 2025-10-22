@@ -75,6 +75,62 @@ class MainScreen:
             "x1": x1, "y1": y1, "x2": x2, "y2": y2
         }
 
+        # add letter-digit lines
+        letters = None
+        if self.settings.language == "EN":
+            letters = self.settings.LETTERS_EN
+        elif self.settings.language == "RU":
+            letters = self.settings.LETTERS_RU
+
+        m1_x = self.player.own_map.screen_coords["x1"]
+        m1_y = self.player.own_map.screen_coords["y1"]
+        m1_x_letter = m1_x - self.settings.cell_size / 2
+        m1_y_letter = m1_y + self.settings.cell_size / 2
+        m1_x_digit = m1_x + self.settings.cell_size / 2
+        m1_y_digit = m1_y - self.settings.cell_size / 2
+
+        m2_x = self.player.opponent_map.screen_coords["x1"]
+        m2_y = self.player.opponent_map.screen_coords["y1"]
+        m2_x_letter = m2_x - self.settings.cell_size / 2
+        m2_y_letter = m2_y + self.settings.cell_size / 2
+        m2_x_digit = m2_x + self.settings.cell_size / 2
+        m2_y_digit = m2_y - self.settings.cell_size / 2
+
+        for i in range(self.settings.map_dim):
+            if i == len(letters):
+                print("Letters is over!")
+                break
+
+            letter = self.c.create_text(
+                m1_x_letter, 
+                m1_y_letter, 
+                text=letters[i], 
+                justify=tk.CENTER
+            )
+            digit = self.c.create_text(
+                m1_x_digit, 
+                m1_y_digit, 
+                text=i + 1, 
+                justify=tk.CENTER
+            )
+            m1_y_letter += self.settings.cell_size
+            m1_x_digit += self.settings.cell_size
+
+            letter = self.c.create_text(
+                m2_x_letter, 
+                m2_y_letter, 
+                text=letters[i], 
+                justify=tk.CENTER
+            )
+            digit = self.c.create_text(
+                m2_x_digit, 
+                m2_y_digit, 
+                text=i + 1, 
+                justify=tk.CENTER
+            )
+            m2_y_letter += self.settings.cell_size
+            m2_x_digit += self.settings.cell_size
+
         # add cells borders
         # for own map:
         m1_x1 = map_margin + 1
@@ -134,8 +190,6 @@ class MainScreen:
             ship.screen_coords = {
                 "x1": x1, "y1": y1, "x2": x2, "y2": y2
             }
-            
-
 
         self.c.bind("<Button-1>", self.click_cell)
         # self.game_is_active = True

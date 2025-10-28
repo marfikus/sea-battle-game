@@ -13,6 +13,11 @@ class Settings:
                 "default": "gray70", # 
                 "selected": "gray55", # 
             },
+            "bt_fire_bg": {
+                "default": "gray45", # 
+                "selected": "gray55", # 
+            },
+
         }
 
         self.language = "RU"

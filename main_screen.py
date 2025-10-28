@@ -1,6 +1,7 @@
 
 import tkinter as tk
 import random
+from my_button import MyButton
 
 
 class MainScreen:
@@ -26,8 +27,7 @@ class MainScreen:
         self.c = None
         self.selected_cell = None
         self.lb_state = None
-        self.bt_fire_text = None
-        self.bt_fire_rect = None
+        self.bt_fire = None
 
 
     def start_gui(self):
@@ -207,53 +207,15 @@ class MainScreen:
 
         # add button fire
         map_coords = self.player.opponent_map.screen_coords
-        x1 = map_coords["x1"] + (map_size / 2)
-        y1 = map_coords["y2"] + 30
-        self.bt_fire_text = self.c.create_text(x1, y1, text="")
+        x = map_coords["x1"] + (map_size / 2)
+        y = map_coords["y2"] + 30
+        self.bt_fire = MyButton(self.c, x, y, "")
+        self.bt_fire.bind("<Button-1>", self.fire)
+        self.bt_fire.hide()
 
-        text_coords = self.c.bbox(self.bt_fire_text)
-        x1 = text_coords[0] - 5
-        x2 = text_coords[2] + 5
-        y1 = map_coords["y2"] + 20
-        y2 = y1 + 20
-        self.bt_fire_rect = self.c.create_rectangle(x1, y1, x2, y2, 
-            width=1, 
-            activefill="gray30", 
-            stipple="gray25"
-        )
-
-        self.hide_bt_fire()
-        self.c.tag_bind(self.bt_fire_rect, "<Button-1>", self.fire)
 
         # self.game_is_active = True
         self.root.mainloop()
-
-
-    def update_bt_fire(self, text):
-        self.c.itemconfig(self.bt_fire_text, 
-            text=text,
-            state="normal"
-        )
-
-        text_coords = self.c.bbox(self.bt_fire_text)
-        rect_coords = self.c.coords(self.bt_fire_rect)
-        x1 = text_coords[0] - 5
-        x2 = text_coords[2] + 5
-        y1 = rect_coords[1]
-        y2 = rect_coords[3]
-
-        self.c.coords(self.bt_fire_rect, x1, y1, x2, y2)
-        self.c.itemconfig(self.bt_fire_rect, state="normal")
-
-
-    def hide_bt_fire(self):
-        self.c.itemconfig(self.bt_fire_text, state="hidden")
-        self.c.itemconfig(self.bt_fire_rect, state="hidden")
-
-
-    def show_bt_fire(self):
-        self.c.itemconfig(self.bt_fire_text, state="normal")
-        self.c.itemconfig(self.bt_fire_rect, state="normal")
 
 
     def fire(self, event):
@@ -279,7 +241,7 @@ class MainScreen:
                     fill=self.settings.colors["cell_bg"]["default"]
                 )
                 self.selected_cell = None
-                self.hide_bt_fire()
+                self.bt_fire.hide()
                 return
 
         for y in range(self.settings.map_dim):
@@ -305,7 +267,7 @@ class MainScreen:
                         self.selected_cell.y, 
                         self.selected_cell.x
                     )
-                    self.update_bt_fire(f"Fire to {code}")
+                    self.bt_fire.update_and_show(f"Fire to {code}")
 
                     break
 

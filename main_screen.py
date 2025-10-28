@@ -25,9 +25,9 @@ class MainScreen:
         self.height = None
         self.c = None
         self.selected_cell = None
-        self.bt_fire = None
-        self.bt_fire_text = None
         self.lb_state = None
+        self.bt_fire_text = None
+        self.bt_fire_rect = None
 
 
     def start_gui(self):
@@ -196,7 +196,7 @@ class MainScreen:
 
         self.c.bind("<Button-1>", self.click_cell)
 
-
+        # add label state
         map_coords = self.player.own_map.screen_coords
         x1 = map_coords["x1"] + (map_size / 2)
         y1 = map_coords["y2"] + 30
@@ -205,38 +205,25 @@ class MainScreen:
             text="Your step"
         )
 
-
+        # add button fire
         map_coords = self.player.opponent_map.screen_coords
         x1 = map_coords["x1"] + (map_size / 2)
         y1 = map_coords["y2"] + 30
-        self.bt_fire_text = self.c.create_text(
-            x1, 
-            y1,
-            text="",
-        )
+        self.bt_fire_text = self.c.create_text(x1, y1, text="")
 
         text_coords = self.c.bbox(self.bt_fire_text)
-        # w = 100
-        # h = 20
-        # x1 = map_coords["x1"] + (map_size / 2) - (w / 2)
         x1 = text_coords[0] - 5
-        # y1 = text_coords[1] - 5
-        y1 = map_coords["y2"] + 20
         x2 = text_coords[2] + 5
-        # y2 = text_coords[3]
+        y1 = map_coords["y2"] + 20
         y2 = y1 + 20
-        # self.bt_fire = self.c.create_rectangle(x1, y1, x1 + w, y1 + h, 
-        self.bt_fire = self.c.create_rectangle(x1, y1, x2, y2, 
-            # fill=self.settings.colors["bt_fire_bg"]["default"], 
+        self.bt_fire_rect = self.c.create_rectangle(x1, y1, x2, y2, 
+            width=1, 
             activefill="gray30", 
-            width=1, stipple="gray25"
+            stipple="gray25"
         )
-        self.c.itemconfig(self.bt_fire_text, state="hidden")
-        self.c.itemconfig(self.bt_fire, state="hidden")
 
-        # self.c.tag_bind(self.bt_fire_text, "<Button-1>", self.fire)
-        self.c.tag_bind(self.bt_fire, "<Button-1>", self.fire)
-
+        self.hide_bt_fire()
+        self.c.tag_bind(self.bt_fire_rect, "<Button-1>", self.fire)
 
         # self.game_is_active = True
         self.root.mainloop()
@@ -244,41 +231,32 @@ class MainScreen:
 
     def update_bt_fire(self, text):
         self.c.itemconfig(self.bt_fire_text, 
-            text=text
+            text=text,
+            state="normal"
         )
-        self.c.itemconfig(self.bt_fire_text, state="normal")
 
-        self.c.delete(self.bt_fire)
-
-        map_coords = self.player.opponent_map.screen_coords
         text_coords = self.c.bbox(self.bt_fire_text)
-        # w = 100
-        # h = 20
-        # x1 = map_coords["x1"] + (map_size / 2) - (w / 2)
+        rect_coords = self.c.coords(self.bt_fire_rect)
         x1 = text_coords[0] - 5
-        # y1 = text_coords[1] - 5
-        y1 = map_coords["y2"] + 20
         x2 = text_coords[2] + 5
-        # y2 = text_coords[3]
-        y2 = y1 + 20
-        # self.bt_fire = self.c.create_rectangle(x1, y1, x1 + w, y1 + h, 
-        self.bt_fire = self.c.create_rectangle(x1, y1, x2, y2, 
-            activefill="gray30", 
-            stipple="gray25",
-            width=1, 
-        )
+        y1 = rect_coords[1]
+        y2 = rect_coords[3]
 
-        self.c.tag_bind(self.bt_fire, "<Button-1>", self.fire)
+        self.c.coords(self.bt_fire_rect, x1, y1, x2, y2)
+        self.c.itemconfig(self.bt_fire_rect, state="normal")
 
 
-    def show_settings(self):
-        # self.settings_screen.show()
-        pass
+    def hide_bt_fire(self):
+        self.c.itemconfig(self.bt_fire_text, state="hidden")
+        self.c.itemconfig(self.bt_fire_rect, state="hidden")
+
+
+    def show_bt_fire(self):
+        self.c.itemconfig(self.bt_fire_text, state="normal")
+        self.c.itemconfig(self.bt_fire_rect, state="normal")
 
 
     def fire(self, event):
-        # print(self.c.bbox(self.bt_fire_text))
-
         if self.selected_cell is None:
             return
         print(self.coords_to_code(self.selected_cell.y, self.selected_cell.x))
@@ -301,11 +279,7 @@ class MainScreen:
                     fill=self.settings.colors["cell_bg"]["default"]
                 )
                 self.selected_cell = None
-                # self.c.itemconfig(self.bt_fire_text, 
-                #     text=""
-                # )
-                self.c.itemconfig(self.bt_fire_text, state="hidden")
-                self.c.itemconfig(self.bt_fire, state="hidden")
+                self.hide_bt_fire()
                 return
 
         for y in range(self.settings.map_dim):
@@ -331,9 +305,6 @@ class MainScreen:
                         self.selected_cell.y, 
                         self.selected_cell.x
                     )
-                    # self.c.itemconfig(self.bt_fire_text, 
-                    #     text=f"Fire to {code}"
-                    # )
                     self.update_bt_fire(f"Fire to {code}")
 
                     break

@@ -20,7 +20,13 @@ class Settings:
 
         }
 
-        self.language = "RU"
-        self.LETTERS_EN = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        self.LETTERS_RU = "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
+        self.language = "ru"
+
+        if self.language == "ru":
+            from string_res import strings_ru as strings
+        elif self.language == "en":
+            from string_res import strings_en as strings
+
+
+        self.strings = strings
 

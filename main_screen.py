@@ -7,14 +7,13 @@ from my_button import MyButton
 class MainScreen:
     def __init__(self, settings, game, player):
         self.settings = settings
-        # self.settings_screen = None
-        # self.input_screen = None
+        self.strings = self.settings.strings
 
         self.game = game
         self.player = player
 
         self.root = tk.Tk()
-        self.root.title("Sea Battle")
+        self.root.title(self.strings["main_screen_title"])
         self.root.resizable(False, False)
 
         # self.mainmenu = tk.Menu(self.root)
@@ -79,11 +78,7 @@ class MainScreen:
         }
 
         # add letter-digit lines
-        letters = None
-        if self.settings.language == "EN":
-            letters = self.settings.LETTERS_EN
-        elif self.settings.language == "RU":
-            letters = self.settings.LETTERS_RU
+        letters = self.strings["letters"]
 
         m1_x = self.player.own_map.screen_coords["x1"]
         m1_y = self.player.own_map.screen_coords["y1"]
@@ -202,7 +197,7 @@ class MainScreen:
         y1 = map_coords["y2"] + 30
         self.lb_state = self.c.create_text(
             x1, y1, 
-            text="Your step"
+            text=self.strings["state_your_step"]
         )
 
         # add button fire
@@ -267,18 +262,14 @@ class MainScreen:
                         self.selected_cell.y, 
                         self.selected_cell.x
                     )
-                    self.bt_fire.update_and_show(f"Fire to {code}")
+                    text = self.strings["bt_fire_title"] + code
+                    self.bt_fire.update_and_show(text)
 
                     break
 
 
     def coords_to_code(self, y, x):
-        letters = None
-        if self.settings.language == "EN":
-            letters = self.settings.LETTERS_EN
-        elif self.settings.language == "RU":
-            letters = self.settings.LETTERS_RU
-
+        letters = self.strings["letters"]
         return f"{letters[y]}{x + 1}"
 
 

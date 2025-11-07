@@ -15,7 +15,8 @@ def main():
         return
 
     game = Game(gui)
-    # game.start()
+    if not gui:
+        game.start()
 
 
 if __name__ == "__main__":

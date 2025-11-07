@@ -70,15 +70,19 @@ class Player:
         y = None
         x = None
         if self.type == PlayerType.HUMAN:
-            #cli version
-            while True:
-                y = self.input_coordinate("Y", 0, self.opponent_map.height - 1)
-                x = self.input_coordinate("X", 0, self.opponent_map.width - 1)
-                content = self.opponent_map.map[y][x].content
-                if content is None:
-                    break
-                else:
-                    print("This point is already used!")
+            if self.game.gui:
+                self.main_screen.make_step()
+                return
+            else:
+                #cli version
+                while True:
+                    y = self.input_coordinate("Y", 0, self.opponent_map.height - 1)
+                    x = self.input_coordinate("X", 0, self.opponent_map.width - 1)
+                    content = self.opponent_map.map[y][x].content
+                    if content is None:
+                        break
+                    else:
+                        print("This point is already used!")
 
         elif self.type == PlayerType.COMPUTER:
             while True:
@@ -88,8 +92,7 @@ class Player:
                 if content is None:
                     break
 
-        # print(y, x)
-        self.game.send(self, ActionType.STEP_REQUEST, StepData(y, x))
+        self.send_step_request(y, x)
 
 
     def step_request(self, data):
@@ -128,11 +131,7 @@ class Player:
             response_type = StepResponseType.REPEATED
             print("Repeated!")
 
-        self.game.send(
-            self, 
-            ActionType.STEP_RESPONSE, 
-            StepData(y, x, response_type, killed_ship)
-        )
+        self.send_step_response(StepData(y, x, response_type, killed_ship))
 
 
     def step_response(self, data):
@@ -143,7 +142,7 @@ class Player:
 
         if response == StepResponseType.AWAY:
             self.opponent_map.map[y][x].content = Miss()
-            self.game.send(self, ActionType.MAKE_STEP)
+            self.send_make_step()
         elif response == StepResponseType.WOUNDED:
             self.opponent_map.map[y][x].content = Wounded()
             self.make_step()
@@ -173,6 +172,18 @@ class Player:
         if len(self.opponent_map.ships) < len(self.own_map.ships):
             return True
         return False
+
+
+    def send_step_request(self, y, x):
+        self.game.send(self, ActionType.STEP_REQUEST, StepData(y, x))
+
+
+    def send_step_response(self, data):
+        self.game.send(self, ActionType.STEP_RESPONSE, data)
+
+
+    def send_make_step(self):
+        self.game.send(self, ActionType.MAKE_STEP)
 
 
 

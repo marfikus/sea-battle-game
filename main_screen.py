@@ -27,6 +27,7 @@ class MainScreen:
         self.selected_cell = None
         self.lb_state = None
         self.bt_fire = None
+        self.make_step = False
 
 
     def start_gui(self):
@@ -197,7 +198,7 @@ class MainScreen:
         y1 = map_coords["y2"] + 30
         self.lb_state = self.c.create_text(
             x1, y1, 
-            text=self.strings["state_your_step"]
+            text=""
         )
 
         # add button fire
@@ -217,15 +218,21 @@ class MainScreen:
         if self.selected_cell is None:
             return
         print(self.coords_to_code(self.selected_cell.y, self.selected_cell.x))
+        self.player.send_step_request(
+            self.selected_cell.y, 
+            self.selected_cell.x
+        )
+        # сбросить выбранную ячейку, установить статус на Ожидание ответа...
 
 
     def click_cell(self, event):
+        if not self.make_step:
+            return
+
         map_coords = self.player.opponent_map.screen_coords
         if event.x < map_coords["x1"] or event.x > map_coords["x2"] or \
          event.y < map_coords["y1"] or event.y > map_coords["y2"]:
             return
-
-        # print(event)
 
         if self.selected_cell is not None:
             rect = self.selected_cell.screen_block
@@ -271,5 +278,12 @@ class MainScreen:
     def coords_to_code(self, y, x):
         letters = self.strings["letters"]
         return f"{letters[y]}{x + 1}"
+
+
+    def make_step():
+        self.c.itemconfig(self.lb_state, 
+            text=self.strings["state_your_step"]
+        )
+        self.make_step = True
 
 

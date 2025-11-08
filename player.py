@@ -16,6 +16,7 @@ class Player:
     def __init__(self, type, game):
         self.type = type
         self.game = game
+        self.main_screen = None
         self.own_map = self.init_own_map()
         self.opponent_map = Map()
 

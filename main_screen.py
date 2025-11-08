@@ -11,6 +11,7 @@ class MainScreen:
 
         self.game = game
         self.player = player
+        self.player.main_screen = self
 
         self.root = tk.Tk()
         self.root.title(self.strings["main_screen_title"])
@@ -27,7 +28,7 @@ class MainScreen:
         self.selected_cell = None
         self.lb_state = None
         self.bt_fire = None
-        self.make_step = False
+        self.step_making = False
 
 
     def start_gui(self):
@@ -209,8 +210,10 @@ class MainScreen:
         self.bt_fire.bind("<Button-1>", self.fire)
         self.bt_fire.hide()
 
+        # добавить кнопку Старт?
+        self.c.bind("<Button-2>", self.start_game)
+        # self.game.start()
 
-        # self.game_is_active = True
         self.root.mainloop()
 
 
@@ -222,11 +225,23 @@ class MainScreen:
             self.selected_cell.y, 
             self.selected_cell.x
         )
-        # сбросить выбранную ячейку, установить статус на Ожидание ответа...
+        
+        rect = self.selected_cell.screen_block
+        coords = self.c.coords(rect)
+        self.c.itemconfig(rect, 
+            fill=self.settings.colors["cell_bg"]["default"]
+        )
+        self.selected_cell = None
+        self.bt_fire.hide()
+
+        self.c.itemconfig(self.lb_state, 
+            text=self.strings["state_waiting_response"]
+        )
+        self.step_making = False
 
 
     def click_cell(self, event):
-        if not self.make_step:
+        if not self.step_making:
             return
 
         map_coords = self.player.opponent_map.screen_coords
@@ -275,15 +290,20 @@ class MainScreen:
                     break
 
 
+    def start_game(self, event):
+        if not self.game.game_is_active:
+            self.game.start()
+
+
     def coords_to_code(self, y, x):
         letters = self.strings["letters"]
         return f"{letters[y]}{x + 1}"
 
 
-    def make_step():
+    def make_step(self):
         self.c.itemconfig(self.lb_state, 
             text=self.strings["state_your_step"]
         )
-        self.make_step = True
+        self.step_making = True
 
 

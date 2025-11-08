@@ -24,11 +24,13 @@ class Game:
         if self.gui:
             self.main_screen = MainScreen(self.settings, self, self.player1)
             self.main_screen.start_gui()
+            # self.start()
 
 
     def start(self):
         self.player1.own_map.show()
         self.player2.own_map.show()
+        self.game_is_active = True
 
         player = random.choice(list(self.opponents))
         print("first step make:", player.type)
@@ -46,6 +48,7 @@ class Game:
 
     def end(self, player):
         print("Game over! Winner is", player.type)
+        self.game_is_active = False
         # надо сообщить противнику тоже...
         # еще вариант когда кто-то сдаётся... наверное добавить в ActionType...
 

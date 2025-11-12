@@ -220,12 +220,14 @@ class MainScreen:
     def fire(self, event):
         if self.selected_cell is None:
             return
+
         print(self.coords_to_code(self.selected_cell.y, self.selected_cell.x))
+        
         self.player.send_step_request(
             self.selected_cell.y, 
             self.selected_cell.x
         )
-        
+
         rect = self.selected_cell.screen_block
         coords = self.c.coords(rect)
         self.c.itemconfig(rect, 
@@ -305,5 +307,38 @@ class MainScreen:
             text=self.strings["state_your_step"]
         )
         self.step_making = True
+
+
+    def step_request_away(self, y, x):
+        pass
+
+
+    def step_request_wounded(self, y, x):
+        pass
+
+
+    def step_request_killed(self, y, x, killed_ship):
+        pass
+
+
+    def step_request_repeated(self, y, x):
+        pass
+
+
+    def step_response_away(self, y, x):
+        pass
+
+
+    def step_response_wounded(self, y, x):
+        pass
+
+
+    def step_response_killed(self, y, x, killed_ship):
+        pass
+
+
+    def step_response_repeated(self, y, x):
+        pass
+
 
 

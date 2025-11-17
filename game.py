@@ -10,6 +10,7 @@ from action_type import ActionType
 class Game:
     def __init__(self, gui):
         self.settings = Settings()
+        self.gui = gui
 
         self.player1 = Player(PlayerType.HUMAN, self)
         self.player2 = Player(PlayerType.COMPUTER, self)
@@ -19,7 +20,6 @@ class Game:
         }
         self.game_is_active = False
 
-        self.gui = gui
         self.main_screen = None
         if self.gui:
             self.main_screen = MainScreen(self.settings, self, self.player1)

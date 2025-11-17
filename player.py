@@ -18,6 +18,7 @@ class Player:
         self.type = type
         self.game = game
         self.main_screen = None
+        self.strings = self.game.settings.strings
         self.own_map = self.init_own_map()
         self.opponent_map = Map()
         self.human_and_gui = (self.type == PlayerType.HUMAN) and self.game.gui
@@ -88,6 +89,10 @@ class Player:
                         print("This point is already used!")
 
         elif self.type == PlayerType.COMPUTER:
+            # если гуи, то установить статус: ожидание хода соперника
+            # if self.game.gui:
+                # self.game.main_screen.waiting_opponent_step()
+
             time.sleep(random.randint(3, 5))
 
             while True:
@@ -146,6 +151,7 @@ class Player:
             if self.human_and_gui:
                 self.main_screen.step_request_repeated(y, x)
 
+        time.sleep(1)
         step_data = StepData(y, x, response_type, killed_ship)
         self.send_step_response(step_data)
 

@@ -1,6 +1,7 @@
 
 import tkinter as tk
 import random
+import time
 from my_button import MyButton
 
 
@@ -221,12 +222,9 @@ class MainScreen:
         if self.selected_cell is None:
             return
 
-        print(self.coords_to_code(self.selected_cell.y, self.selected_cell.x))
-        
-        self.player.send_step_request(
-            self.selected_cell.y, 
-            self.selected_cell.x
-        )
+        # print(self.coords_to_code(self.selected_cell.y, self.selected_cell.x))
+        y = self.selected_cell.y
+        x = self.selected_cell.x
 
         rect = self.selected_cell.screen_block
         coords = self.c.coords(rect)
@@ -239,7 +237,10 @@ class MainScreen:
         self.c.itemconfig(self.lb_state, 
             text=self.strings["state_waiting_response"]
         )
+        self.root.update_idletasks()
         self.step_making = False
+
+        self.player.send_step_request(y, x)
 
 
     def click_cell(self, event):
@@ -310,15 +311,70 @@ class MainScreen:
 
 
     def step_request_away(self, y, x):
-        pass
+        text = "{}{}: {}".format(
+            self.strings["state_opponent_shot_on"],
+            self.coords_to_code(y, x),
+            self.strings["away"]
+        )
+        print(text)
+        self.c.itemconfig(self.lb_state, 
+            text=text
+        )
+
+        rect = self.player.own_map.map[y][x].screen_block
+        coords = self.c.coords(rect)
+        self.draw_circle(coords)
+
+        self.root.update_idletasks()
+        time.sleep(2)
 
 
     def step_request_wounded(self, y, x):
-        pass
+        text = "{}{}: {}".format(
+            self.strings["state_opponent_shot_on"],
+            self.coords_to_code(y, x),
+            self.strings["wounded"]
+        )
+        print(text)
+        self.c.itemconfig(self.lb_state, 
+            text=text
+        )
+
+        rect = self.player.own_map.map[y][x].screen_block
+        coords = self.c.coords(rect)
+        self.draw_cross(coords)
+
+        self.root.update_idletasks()
+        time.sleep(2)
+
+        self.c.itemconfig(self.lb_state, 
+            text=self.strings["state_waiting_opponent_step"]
+        )
+        self.root.update_idletasks()
 
 
-    def step_request_killed(self, y, x, killed_ship):
-        pass
+    def step_request_killed(self, y, x, ship):
+        text = "{}{}: {}".format(
+            self.strings["state_opponent_shot_on"],
+            self.coords_to_code(y, x),
+            self.strings["killed"]
+        )
+        print(text)
+        self.c.itemconfig(self.lb_state, 
+            text=text
+        )
+
+        rect = self.player.own_map.map[y][x].screen_block
+        coords = self.c.coords(rect)
+        self.draw_cross(coords)
+
+        self.root.update_idletasks()
+        time.sleep(2)
+
+        self.c.itemconfig(self.lb_state, 
+            text=self.strings["state_waiting_opponent_step"]
+        )
+        self.root.update_idletasks()
 
 
     def step_request_repeated(self, y, x):
@@ -326,19 +382,110 @@ class MainScreen:
 
 
     def step_response_away(self, y, x):
-        pass
+        text = "{}{}: {}".format(
+            self.strings["state_your_shot_on"],
+            self.coords_to_code(y, x),
+            self.strings["away"]
+        )
+        print(text)
+        self.c.itemconfig(self.lb_state, 
+            text=text
+        )
+
+        rect = self.player.opponent_map.map[y][x].screen_block
+        coords = self.c.coords(rect)
+        self.draw_circle(coords)
+
+        self.root.update_idletasks()
+        time.sleep(2)
+
+        self.c.itemconfig(self.lb_state, 
+            text=self.strings["state_waiting_opponent_step"]
+        )
+        self.root.update_idletasks()
 
 
     def step_response_wounded(self, y, x):
-        pass
+        text = "{}{}: {}".format(
+            self.strings["state_your_shot_on"],
+            self.coords_to_code(y, x),
+            self.strings["wounded"]
+        )
+        print(text)
+        self.c.itemconfig(self.lb_state, 
+            text=text
+        )
+
+        rect = self.player.opponent_map.map[y][x].screen_block
+        coords = self.c.coords(rect)
+        self.draw_cross(coords)
+
+        self.root.update_idletasks()
+        time.sleep(2)
 
 
-    def step_response_killed(self, y, x, killed_ship):
-        pass
+    def step_response_killed(self, y, x, ship):
+        text = "{}{}: {}".format(
+            self.strings["state_your_shot_on"],
+            self.coords_to_code(y, x),
+            self.strings["killed"]
+        )
+        print(text)
+        self.c.itemconfig(self.lb_state, 
+            text=text
+        )
+
+        rect = self.player.opponent_map.map[y][x].screen_block
+        coords = self.c.coords(rect)
+        self.draw_cross(coords)
+
+        # draw ship borders
+        _x = ship.parts[0].map_x
+        _y = ship.parts[0].map_y
+        rect = self.player.opponent_map.map[_y][_x].screen_block
+        coords = self.c.coords(rect)
+        x1 = coords[0] - 1
+        y1 = coords[1] - 1
+
+        _x = ship.parts[-1].map_x
+        _y = ship.parts[-1].map_y
+        rect = self.player.opponent_map.map[_y][_x].screen_block
+        coords = self.c.coords(rect)
+        x2 = coords[2]
+        y2 = coords[3]
+
+        self.c.create_rectangle(x1, y1, x2, y2)
+        ship.screen_coords = {
+            "x1": x1, "y1": y1, "x2": x2, "y2": y2
+        }
+
+        self.root.update_idletasks()
+        time.sleep(2)
 
 
     def step_response_repeated(self, y, x):
         pass
+
+
+    def draw_circle(self, coords, radius=2):
+        center_y = coords[1] + (coords[3] - coords[1]) // 2
+        center_x = coords[0] + (coords[2] - coords[0]) // 2
+        x1 = center_x - radius
+        x2 = center_x + radius
+        y1 = center_y - radius
+        y2 = center_y + radius
+        self.c.create_oval(x1, y1, x2, y2, fill="black")
+
+
+    def draw_cross(self, coords, margin=1):
+        x1 = coords[0] + margin
+        y1 = coords[1] + margin
+        x2 = coords[2] - margin
+        y2 = coords[3] - margin
+        self.c.create_line(x1, y1, x2, y2, fill="black", width=2)
+        y1 = coords[3] - margin
+        y2 = coords[1] + margin
+        self.c.create_line(x1, y1, x2, y2, fill="black", width=2)
 
 
 

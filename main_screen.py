@@ -346,11 +346,7 @@ class MainScreen:
 
         self.root.update_idletasks()
         time.sleep(2)
-
-        self.c.itemconfig(self.lb_state, 
-            text=self.strings["state_waiting_opponent_step"]
-        )
-        self.root.update_idletasks()
+        self.waiting_opponent_step()
 
 
     def step_request_killed(self, y, x, ship):
@@ -370,11 +366,7 @@ class MainScreen:
 
         self.root.update_idletasks()
         time.sleep(2)
-
-        self.c.itemconfig(self.lb_state, 
-            text=self.strings["state_waiting_opponent_step"]
-        )
-        self.root.update_idletasks()
+        self.waiting_opponent_step()
 
 
     def step_request_repeated(self, y, x):
@@ -398,11 +390,7 @@ class MainScreen:
 
         self.root.update_idletasks()
         time.sleep(2)
-
-        self.c.itemconfig(self.lb_state, 
-            text=self.strings["state_waiting_opponent_step"]
-        )
-        self.root.update_idletasks()
+        self.waiting_opponent_step()
 
 
     def step_response_wounded(self, y, x):
@@ -487,5 +475,11 @@ class MainScreen:
         y2 = coords[1] + margin
         self.c.create_line(x1, y1, x2, y2, fill="black", width=2)
 
+
+    def waiting_opponent_step(self):
+        self.c.itemconfig(self.lb_state, 
+            text=self.strings["state_waiting_opponent_step"]
+        )
+        self.root.update_idletasks()
 
 

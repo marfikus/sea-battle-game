@@ -89,9 +89,8 @@ class Player:
                         print("This point is already used!")
 
         elif self.type == PlayerType.COMPUTER:
-            # если гуи, то установить статус: ожидание хода соперника
-            # if self.game.gui:
-                # self.game.main_screen.waiting_opponent_step()
+            if self.game.gui:
+                self.game.main_screen.waiting_opponent_step()
 
             time.sleep(random.randint(3, 5))
 

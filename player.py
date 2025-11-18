@@ -69,9 +69,9 @@ class Player:
     def make_step(self):
         self.send_waiting_opponent_step()
 
-        print("make step by", self.type)
-        self.own_map.show()
-        self.opponent_map.show()
+        # print("make step by", self.type)
+        # self.own_map.show()
+        # self.opponent_map.show()
 
         y = None
         x = None
@@ -80,7 +80,12 @@ class Player:
                 self.main_screen.make_step()
                 return
             else:
-                #cli version
+                print(self.strings["your_ships_map"])
+                self.own_map.show()
+                print(self.strings["opponent_ships_map"])
+                self.opponent_map.show()
+                print(self.strings["state_your_step"])
+
                 while True:
                     y = self.input_coordinate("Y", 0, self.opponent_map.height - 1)
                     x = self.input_coordinate("X", 0, self.opponent_map.width - 1)

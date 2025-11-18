@@ -44,6 +44,8 @@ class Game:
             self.opponents[player].step_request(data)
         elif action_type == ActionType.STEP_RESPONSE:
             self.opponents[player].step_response(data)
+        elif action_type == ActionType.WAITING_OPPONENT_STEP:
+            self.opponents[player].waiting_opponent_step()
 
 
     def end(self, player):

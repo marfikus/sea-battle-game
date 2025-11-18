@@ -67,6 +67,8 @@ class Player:
 
 
     def make_step(self):
+        self.send_waiting_opponent_step()
+
         print("make step by", self.type)
         self.own_map.show()
         self.opponent_map.show()
@@ -89,9 +91,6 @@ class Player:
                         print("This point is already used!")
 
         elif self.type == PlayerType.COMPUTER:
-            if self.game.gui:
-                self.game.main_screen.waiting_opponent_step()
-
             time.sleep(random.randint(3, 5))
 
             while True:
@@ -202,6 +201,14 @@ class Player:
         return False
 
 
+    def waiting_opponent_step(self):
+        if self.type == PlayerType.HUMAN:
+            if self.game.gui:
+                self.main_screen.waiting_opponent_step()
+            else:
+                print(self.strings["state_waiting_opponent_step"])
+
+
     def send_step_request(self, y, x):
         self.game.send(self, ActionType.STEP_REQUEST, StepData(y, x))
 
@@ -212,6 +219,10 @@ class Player:
 
     def send_make_step(self):
         self.game.send(self, ActionType.MAKE_STEP)
+
+
+    def send_waiting_opponent_step(self):
+        self.game.send(self, ActionType.WAITING_OPPONENT_STEP)
 
 
 

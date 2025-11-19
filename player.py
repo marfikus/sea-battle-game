@@ -118,13 +118,10 @@ class Player:
         killed_ship = None
 
         if content is None:
+            # away
             self.own_map.map[y][x].content = Miss()
             response_type = StepResponseType.AWAY
-
-            print("Away!")
-            # self.step_request_away(y, x)
-            if self.human_and_gui:
-                self.main_screen.step_request_away(y, x)
+            self.step_request_away(y, x)
 
         elif isinstance(content, ShipPart):
             if content.alive:
@@ -133,41 +130,75 @@ class Player:
                 if content.ship.alive:
                     # wounded
                     response_type = StepResponseType.WOUNDED
-                    print("Wounded!")
-                    if self.human_and_gui:
-                        self.main_screen.step_request_wounded(y, x)
+                    self.step_request_wounded(y, x)
                 else:
                     # killed
                     response_type = StepResponseType.KILLED
                     killed_ship = content.ship
-                    print("Killed!")
-                    if self.human_and_gui:
-                        self.main_screen.step_request_killed(y, x, killed_ship)
+                    self.step_request_killed(y, x, killed_ship)
             else:
                 # repeated
                 response_type = StepResponseType.REPEATED
-                print("Repeated!")
-                if self.human_and_gui:
-                    self.main_screen.step_request_repeated(y, x)
+                self.step_request_repeated(y, x)
 
         elif isinstance(content, Miss):
             # repeated
             response_type = StepResponseType.REPEATED
-            print("Repeated!")
-            if self.human_and_gui:
-                self.main_screen.step_request_repeated(y, x)
+            self.step_request_repeated(y, x)
 
         time.sleep(1)
         step_data = StepData(y, x, response_type, killed_ship)
         self.send_step_response(step_data)
 
 
-    def step_request_away(y, x):
+    def step_request_away(self, y, x):
         if self.type == PlayerType.HUMAN:
-            # формируем текст и передаём его либо в гуи, либо вывод в консоль
-            text = ""
+            text = "{}{}: {}".format(
+                self.strings["state_opponent_shot_on"],
+                self.coords_to_code(y, x),
+                self.strings["away"]
+            )
             if self.game.gui:
                 self.main_screen.step_request_away(y, x, text)
+            else:
+                print(text)
+
+
+    def step_request_wounded(self, y, x):
+        if self.type == PlayerType.HUMAN:
+            text = "{}{}: {}".format(
+                self.strings["state_opponent_shot_on"],
+                self.coords_to_code(y, x),
+                self.strings["wounded"]
+            )
+            if self.game.gui:
+                self.main_screen.step_request_wounded(y, x, text)
+            else:
+                print(text)
+
+
+    def step_request_killed(self, y, x, killed_ship):
+        if self.type == PlayerType.HUMAN:
+            text = "{}{}: {}".format(
+                self.strings["state_opponent_shot_on"],
+                self.coords_to_code(y, x),
+                self.strings["killed"]
+            )
+            if self.game.gui:
+                self.main_screen.step_request_killed(y, x, killed_ship, text)
+            else:
+                print(text)
+
+
+    def step_request_repeated(self, y, x):
+        if self.type == PlayerType.HUMAN:
+            text = "{}{}: {}".format(
+                self.strings["state_opponent_shot_on"],
+                self.coords_to_code(y, x),
+                self.strings["repeated"]
+            )
+            if self.game.gui:
+                self.main_screen.step_request_repeated(y, x, text)
             else:
                 print(text)
 

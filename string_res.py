@@ -11,6 +11,7 @@ strings_ru = {
     "away": "Мимо!",
     "wounded": "Ранен!",
     "killed": "Убит!",
+    "repeated": "Было!",
     "your_ships_map": "Карта ваших кораблей:",
     "opponent_ships_map": "Карта кораблей соперника:",
 }
@@ -27,6 +28,7 @@ strings_en = {
     "away": "Away!",
     "wounded": "Wounded!",
     "killed": "Killed!",
+    "repeated": "It was!",
     "your_ships_map": "Your ships map:",
     "opponent_ships_map": "Opponent ships map:",
 }

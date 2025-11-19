@@ -305,16 +305,8 @@ class MainScreen:
         self.step_making = True
 
 
-    def step_request_away(self, y, x):
-        text = "{}{}: {}".format(
-            self.strings["state_opponent_shot_on"],
-            self.player.coords_to_code(y, x),
-            self.strings["away"]
-        )
-        print(text)
-        self.c.itemconfig(self.lb_state, 
-            text=text
-        )
+    def step_request_away(self, y, x, text):
+        self.c.itemconfig(self.lb_state, text=text)
 
         rect = self.player.own_map.map[y][x].screen_block
         coords = self.c.coords(rect)
@@ -324,16 +316,8 @@ class MainScreen:
         time.sleep(2)
 
 
-    def step_request_wounded(self, y, x):
-        text = "{}{}: {}".format(
-            self.strings["state_opponent_shot_on"],
-            self.player.coords_to_code(y, x),
-            self.strings["wounded"]
-        )
-        print(text)
-        self.c.itemconfig(self.lb_state, 
-            text=text
-        )
+    def step_request_wounded(self, y, x, text):
+        self.c.itemconfig(self.lb_state, text=text)
 
         rect = self.player.own_map.map[y][x].screen_block
         coords = self.c.coords(rect)
@@ -344,16 +328,8 @@ class MainScreen:
         self.waiting_opponent_step()
 
 
-    def step_request_killed(self, y, x, ship):
-        text = "{}{}: {}".format(
-            self.strings["state_opponent_shot_on"],
-            self.player.coords_to_code(y, x),
-            self.strings["killed"]
-        )
-        print(text)
-        self.c.itemconfig(self.lb_state, 
-            text=text
-        )
+    def step_request_killed(self, y, x, ship, text):
+        self.c.itemconfig(self.lb_state, text=text)
 
         rect = self.player.own_map.map[y][x].screen_block
         coords = self.c.coords(rect)
@@ -364,8 +340,13 @@ class MainScreen:
         self.waiting_opponent_step()
 
 
-    def step_request_repeated(self, y, x):
-        pass
+    def step_request_repeated(self, y, x, text):
+        self.c.itemconfig(self.lb_state, text=text)
+
+        # ...?
+
+        self.root.update_idletasks()
+        time.sleep(2)
 
 
     def step_response_away(self, y, x):

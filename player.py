@@ -110,6 +110,7 @@ class Player:
 
     def step_request(self, data):
         print("step request to", self.type, data.coords)
+
         y = data.coords["y"]
         x = data.coords["x"]
         content = self.own_map.map[y][x].content
@@ -119,7 +120,9 @@ class Player:
         if content is None:
             self.own_map.map[y][x].content = Miss()
             response_type = StepResponseType.AWAY
+
             print("Away!")
+            # self.step_request_away(y, x)
             if self.human_and_gui:
                 self.main_screen.step_request_away(y, x)
 
@@ -157,6 +160,16 @@ class Player:
         time.sleep(1)
         step_data = StepData(y, x, response_type, killed_ship)
         self.send_step_response(step_data)
+
+
+    def step_request_away(y, x):
+        if self.type == PlayerType.HUMAN:
+            # формируем текст и передаём его либо в гуи, либо вывод в консоль
+            text = ""
+            if self.game.gui:
+                self.main_screen.step_request_away(y, x, text)
+            else:
+                print(text)
 
 
     def step_response(self, data):
@@ -229,5 +242,9 @@ class Player:
     def send_waiting_opponent_step(self):
         self.game.send(self, ActionType.WAITING_OPPONENT_STEP)
 
+
+    def coords_to_code(self, y, x):
+        letters = self.strings["letters"]
+        return f"{letters[y]}{x + 1}"
 
 

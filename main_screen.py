@@ -222,7 +222,7 @@ class MainScreen:
         if self.selected_cell is None:
             return
 
-        # print(self.coords_to_code(self.selected_cell.y, self.selected_cell.x))
+        # print(self.player.coords_to_code(self.selected_cell.y, self.selected_cell.x))
         y = self.selected_cell.y
         x = self.selected_cell.x
 
@@ -283,7 +283,7 @@ class MainScreen:
                     self.c.itemconfig(rect, 
                         fill=self.settings.colors["cell_bg"]["selected"]
                     )
-                    code = self.coords_to_code(
+                    code = self.player.coords_to_code(
                         self.selected_cell.y, 
                         self.selected_cell.x
                     )
@@ -298,11 +298,6 @@ class MainScreen:
             self.game.start()
 
 
-    def coords_to_code(self, y, x):
-        letters = self.strings["letters"]
-        return f"{letters[y]}{x + 1}"
-
-
     def make_step(self):
         self.c.itemconfig(self.lb_state, 
             text=self.strings["state_your_step"]
@@ -313,7 +308,7 @@ class MainScreen:
     def step_request_away(self, y, x):
         text = "{}{}: {}".format(
             self.strings["state_opponent_shot_on"],
-            self.coords_to_code(y, x),
+            self.player.coords_to_code(y, x),
             self.strings["away"]
         )
         print(text)
@@ -332,7 +327,7 @@ class MainScreen:
     def step_request_wounded(self, y, x):
         text = "{}{}: {}".format(
             self.strings["state_opponent_shot_on"],
-            self.coords_to_code(y, x),
+            self.player.coords_to_code(y, x),
             self.strings["wounded"]
         )
         print(text)
@@ -352,7 +347,7 @@ class MainScreen:
     def step_request_killed(self, y, x, ship):
         text = "{}{}: {}".format(
             self.strings["state_opponent_shot_on"],
-            self.coords_to_code(y, x),
+            self.player.coords_to_code(y, x),
             self.strings["killed"]
         )
         print(text)
@@ -376,7 +371,7 @@ class MainScreen:
     def step_response_away(self, y, x):
         text = "{}{}: {}".format(
             self.strings["state_your_shot_on"],
-            self.coords_to_code(y, x),
+            self.player.coords_to_code(y, x),
             self.strings["away"]
         )
         print(text)
@@ -396,7 +391,7 @@ class MainScreen:
     def step_response_wounded(self, y, x):
         text = "{}{}: {}".format(
             self.strings["state_your_shot_on"],
-            self.coords_to_code(y, x),
+            self.player.coords_to_code(y, x),
             self.strings["wounded"]
         )
         print(text)
@@ -415,7 +410,7 @@ class MainScreen:
     def step_response_killed(self, y, x, ship):
         text = "{}{}: {}".format(
             self.strings["state_your_shot_on"],
-            self.coords_to_code(y, x),
+            self.player.coords_to_code(y, x),
             self.strings["killed"]
         )
         print(text)

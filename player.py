@@ -109,8 +109,7 @@ class Player:
 
 
     def step_request(self, data):
-        print("step request to", self.type, data.coords)
-
+        # print("step request to", self.type, data.coords)
         y = data.coords["y"]
         x = data.coords["x"]
         content = self.own_map.map[y][x].content
@@ -204,20 +203,18 @@ class Player:
 
 
     def step_response(self, data):
-        print("step response to", self.type, data.coords, data.step_response_type)
+        # print("step response to", self.type, data.coords, data.step_response_type)
         y = data.coords["y"]
         x = data.coords["x"]
         response = data.step_response_type
 
         if response == StepResponseType.AWAY:
             self.opponent_map.map[y][x].content = Miss()
-            if self.human_and_gui:
-                self.main_screen.step_response_away(y, x)
+            self.step_response_away(y, x)
             self.send_make_step()
         elif response == StepResponseType.WOUNDED:
             self.opponent_map.map[y][x].content = Wounded()
-            if self.human_and_gui:
-                self.main_screen.step_response_wounded(y, x)
+            self.step_response_wounded(y, x)
             self.make_step()
         elif response == StepResponseType.KILLED:
             # добавляем убитый корабль на карту
@@ -229,8 +226,7 @@ class Player:
                 self.opponent_map.map[p.map_y][p.map_x].content = part
             self.opponent_map.ships.append(ship)
 
-            if self.human_and_gui:
-                self.main_screen.step_response_killed(y, x, ship)
+            self.step_response_killed(y, x, ship)
             # проверить оставшиеся корабли противника, возможен конец игры
             if self.opponent_has_alive_ships():
                 self.make_step()
@@ -238,8 +234,59 @@ class Player:
                 self.game.end(self)
             
         elif response == StepResponseType.REPEATED:
-            if self.human_and_gui:
-                self.main_screen.step_response_repeated(y, x)
+            self.step_response_repeated(y, x)
+
+
+    def step_response_away(self, y, x):
+        if self.type == PlayerType.HUMAN:
+            text = "{}{}: {}".format(
+                self.strings["state_your_shot_on"],
+                self.coords_to_code(y, x),
+                self.strings["away"]
+            )
+            if self.game.gui:
+                self.main_screen.step_response_away(y, x, text)
+            else:
+                print(text)
+
+
+    def step_response_wounded(self, y, x):
+        if self.type == PlayerType.HUMAN:
+            text = "{}{}: {}".format(
+                self.strings["state_your_shot_on"],
+                self.coords_to_code(y, x),
+                self.strings["wounded"]
+            )
+            if self.game.gui:
+                self.main_screen.step_response_wounded(y, x, text)
+            else:
+                print(text)
+
+
+    def step_response_killed(self, y, x, ship):
+        if self.type == PlayerType.HUMAN:
+            text = "{}{}: {}".format(
+                self.strings["state_your_shot_on"],
+                self.coords_to_code(y, x),
+                self.strings["killed"]
+            )
+            if self.game.gui:
+                self.main_screen.step_response_killed(y, x, ship, text)
+            else:
+                print(text)
+
+
+    def step_response_repeated(self, y, x):
+        if self.type == PlayerType.HUMAN:
+            text = "{}{}: {}".format(
+                self.strings["state_your_shot_on"],
+                self.coords_to_code(y, x),
+                self.strings["repeated"]
+            )
+            if self.game.gui:
+                self.main_screen.step_response_repeated(y, x, text)
+            else:
+                print(text)
 
 
     def opponent_has_alive_ships(self):

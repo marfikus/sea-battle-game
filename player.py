@@ -20,12 +20,12 @@ class Player:
         self.main_screen = None
         self.strings = self.game.settings.strings
         self.own_map = self.init_own_map()
-        self.opponent_map = Map()
+        self.opponent_map = Map(self)
         self.human_and_gui = (self.type == PlayerType.HUMAN) and self.game.gui
 
 
     def init_own_map(self):
-        m = Map()
+        m = Map(self)
         # generation ship list
         ships = []
         max_ = 5
@@ -47,23 +47,6 @@ class Player:
                     print("Ship not added!")
 
         return m
-
-
-    def input_coordinate(self, axis, min_value, max_value):
-        while True:
-            c = input(f"Enter '{axis}' coordinate please: ")
-            try:
-                c = int(c)
-            except ValueError:
-                print("Incorrect value!")
-                continue
-
-            if min_value <= c <= max_value:
-                break
-            else:
-                print(f"Value is out of range: {min_value}...{max_value}")
-
-        return c
 
 
     def input_coordinates(self):

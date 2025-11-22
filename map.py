@@ -7,22 +7,26 @@ from orientation import Orientation
 
 
 class Map:
-    def __init__(self, w=10, h=10):
+    def __init__(self, player, w=10, h=10):
         self.width = w
         self.height = h
+        self.player = player
         self.map = [[Cell(y, x) for x in range(self.width)] for y in range(self.height)]
         self.ships = []
         self.screen_coords = None
+        self.strings = self.player.strings
 
 
     def show(self):
-        border = " " + "-=-" * len(self.map[0])
+        letters = self.strings["letters"][:self.height]
+        border = "    " + "-=-" * len(self.map[0])
+        s = "  ".join([str(i + 1) for i in range(self.width)])
+        num_line = f"     {s}"
+        print(num_line)
         print(border)
         for y in range(self.height):
-            print("|", end="")
-            num_line = " "
+            print(f" {letters[y]} |", end="")
             for x in range(self.width):
-                num_line += f" {x} "
                 content = self.map[y][x].content
                 if content is None:
                     print("   ", end="")
@@ -37,9 +41,9 @@ class Map:
                     print(" w ", end="")
                 elif isinstance(content, Miss):
                     print(" o ", end="")
-            print("|", y)
+            print("|")
         print(border)
-        print(num_line)
+        # print(num_line)
 
 
     def add_ship(self, ship, y, x, orientation, ship_gap):

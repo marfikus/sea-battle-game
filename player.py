@@ -66,12 +66,43 @@ class Player:
         return c
 
 
-    def make_step(self):
-        self.send_waiting_opponent_step()
+    def input_coordinates(self):
+        letters = self.strings["letters"][:self.opponent_map.height]
+        min_value = 1
+        max_value = self.opponent_map.width
+        y = None 
+        x = None
 
+        while True:
+            val = input("Input your step(letter and number): ")
+
+            if len(val) < 2:
+                print("Incorrect input!")
+                continue
+
+            if val[0].upper() in letters:
+                y = letters.index(val[0].upper())
+            else:
+                print("Incorrect letter!")
+                continue
+
+            try:
+                x = int(val[1:])
+            except ValueError:
+                print("Incorrect number!")
+                continue
+
+            if min_value <= x <= max_value:
+                break
+            else:
+                print(f"Number is out of range: {min_value}...{max_value}")
+
+        return y, x - 1
+
+
+    def make_step(self):
         # print("make step by", self.type)
-        # self.own_map.show()
-        # self.opponent_map.show()
+        self.send_waiting_opponent_step()
 
         y = None
         x = None
@@ -87,8 +118,7 @@ class Player:
                 print(self.strings["state_your_step"])
 
                 while True:
-                    y = self.input_coordinate("Y", 0, self.opponent_map.height - 1)
-                    x = self.input_coordinate("X", 0, self.opponent_map.width - 1)
+                    y, x = self.input_coordinates()
                     content = self.opponent_map.map[y][x].content
                     if content is None:
                         break
@@ -96,7 +126,7 @@ class Player:
                         print("This point is already used!")
 
         elif self.type == PlayerType.COMPUTER:
-            time.sleep(random.randint(3, 5))
+            time.sleep(random.randint(2, 4))
 
             while True:
                 y = random.randint(0, self.opponent_map.height - 1)

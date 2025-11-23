@@ -65,13 +65,13 @@ class Map:
             inc_x = 1
             max_x = x + (len(ship.parts) - 1)
             if max_x >= self.width:
-                print("Very long ship!")
+                # print("Very long ship!")
                 return False
         elif orientation == Orientation.VERTICAL:
             inc_y = 1
             max_y = y + (len(ship.parts) - 1)
             if max_y >= self.height:
-                print("Very long ship!")
+                # print("Very long ship!")
                 return False
 
         near_cells_coords = [
@@ -90,7 +90,7 @@ class Map:
         ship_coords = []
         for part in ship.parts:
             if self.map[_y][_x].content is not None:
-                print("Busy cell!")
+                # print("Busy cell!")
                 return False
 
             if ship_gap:
@@ -103,7 +103,7 @@ class Map:
                         continue
 
                     if self.map[near_y][near_x].content is not None:
-                        print("Near cell is busy!")
+                        # print("Near cell is busy!")
                         return False
 
             ship_coords.append((_y, _x))

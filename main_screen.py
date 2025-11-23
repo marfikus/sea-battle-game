@@ -433,6 +433,13 @@ class MainScreen:
         self.c.create_line(x1, y1, x2, y2, fill="black", width=2)
 
 
+    def opponent_first_step(self):
+        self.c.itemconfig(self.lb_state, 
+            text=self.strings["state_opponent_first_step"]
+        )
+        self.root.update_idletasks()
+
+
     def waiting_opponent_step(self):
         self.c.itemconfig(self.lb_state, 
             text=self.strings["state_waiting_opponent_step"]

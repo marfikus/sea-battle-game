@@ -306,6 +306,16 @@ class Player:
         return False
 
 
+    def opponent_first_step(self):
+        if self.type == PlayerType.HUMAN:
+            if self.game.gui:
+                self.main_screen.opponent_first_step()
+            else:
+                self.show_own_maps()
+                print(self.strings["state_opponent_first_step"])
+            time.sleep(2)
+
+
     def waiting_opponent_step(self):
         if self.type == PlayerType.HUMAN:
             if self.game.gui:

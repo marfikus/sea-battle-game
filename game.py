@@ -40,15 +40,11 @@ class Game:
     def start(self):
         # self.player1.own_map.show()
         # self.player2.own_map.show()
+
         self.game_is_active = True
         player = random.choice(list(self.opponents))
         if player.type == PlayerType.COMPUTER:
-            if self.gui:
-                pass
-                # вывести сообщение о первом ходе соперника
-            else:
-                self.opponents[player].show_own_maps()
-                print("First step make opponent!")
+            self.opponents[player].opponent_first_step()
         player.make_step()
 
 

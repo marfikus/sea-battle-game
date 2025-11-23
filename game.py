@@ -47,8 +47,7 @@ class Game:
                 pass
                 # вывести сообщение о первом ходе соперника
             else:
-                # вывести свои карты?
-                # self.opponents[player].show_own_maps()
+                self.opponents[player].show_own_maps()
                 print("First step make opponent!")
         player.make_step()
 

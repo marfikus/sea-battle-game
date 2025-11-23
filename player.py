@@ -93,10 +93,7 @@ class Player:
                 self.main_screen.make_step()
                 return
             else:
-                print(self.strings["your_ships_map"])
-                self.own_map.show()
-                print(self.strings["opponent_ships_map"])
-                self.opponent_map.show()
+                self.show_own_maps()
                 print(self.strings["state_your_step"])
 
                 while True:
@@ -315,6 +312,13 @@ class Player:
                 self.main_screen.waiting_opponent_step()
             else:
                 print(self.strings["state_waiting_opponent_step"])
+
+
+    def show_own_maps(self):
+        print(self.strings["your_ships_map"])
+        self.own_map.show()
+        print(self.strings["opponent_ships_map"])
+        self.opponent_map.show()
 
 
     def send_step_request(self, y, x):

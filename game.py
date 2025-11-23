@@ -8,9 +8,10 @@ from action_type import ActionType
 
 
 class Game:
-    def __init__(self, gui):
+    def __init__(self):
         self.settings = Settings()
-        self.gui = gui
+        self.gui = None
+        self.main_screen = None
 
         self.player1 = Player(PlayerType.HUMAN, self)
         self.player2 = Player(PlayerType.COMPUTER, self)
@@ -20,20 +21,35 @@ class Game:
         }
         self.game_is_active = False
 
-        self.main_screen = None
-        if self.gui:
+
+    def select_version(self):
+        cmd = input("Select version please (1 - console, 2 - gui): ")
+        # cmd = "1"
+        if cmd == "1":
+            self.gui = False
+            self.start()
+        elif cmd == "2":
+            self.gui = True
             self.main_screen = MainScreen(self.settings, self, self.player1)
             self.main_screen.start_gui()
-            # self.start()
+        else:
+            print("Unknown command!")
+            return
 
 
     def start(self):
-        self.player1.own_map.show()
-        self.player2.own_map.show()
+        # self.player1.own_map.show()
+        # self.player2.own_map.show()
         self.game_is_active = True
-
         player = random.choice(list(self.opponents))
-        print("first step make:", player.type)
+        if player.type == PlayerType.COMPUTER:
+            if self.gui:
+                pass
+                # вывести сообщение о первом ходе соперника
+            else:
+                # вывести свои карты?
+                # self.opponents[player].show_own_maps()
+                print("First step make opponent!")
         player.make_step()
 
 

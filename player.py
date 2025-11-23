@@ -21,7 +21,6 @@ class Player:
         self.strings = self.game.settings.strings
         self.own_map = self.init_own_map()
         self.opponent_map = Map(self)
-        self.human_and_gui = (self.type == PlayerType.HUMAN) and self.game.gui
 
 
     def init_own_map(self):

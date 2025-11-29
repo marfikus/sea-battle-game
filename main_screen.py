@@ -200,7 +200,7 @@ class MainScreen:
         y1 = map_coords["y2"] + 30
         self.lb_state = self.c.create_text(
             x1, y1, 
-            text=""
+            text=self.strings["state_press_start_game"]
         )
 
         # add button fire
@@ -212,8 +212,7 @@ class MainScreen:
         self.bt_fire.hide()
 
         # добавить кнопку Старт?
-        self.c.bind("<Button-2>", self.start_game)
-        # self.game.start()
+        self.c.bind("<Button-3>", self.start_game)
 
         self.root.mainloop()
 

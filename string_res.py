@@ -2,6 +2,7 @@
 strings_ru = {
     "main_screen_title": "Морской Бой",
     "letters": "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ",
+    "state_press_start_game": "Правый клик - начать игру",
     "state_your_step": "Ваш ход",
     "state_your_shot_on": "Ваш выстрел по ",
     "state_opponent_shot_on": "Выстрел соперника по ",
@@ -20,6 +21,7 @@ strings_ru = {
 strings_en = {
     "main_screen_title": "Sea Battle",
     "letters": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "state_press_start_game": "Right click - start game",
     "state_your_step": "Your step",
     "state_your_shot_on": "Your shot on ",
     "state_opponent_shot_on": "Opponent shot on ",

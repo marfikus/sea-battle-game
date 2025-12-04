@@ -16,6 +16,11 @@ strings_ru = {
     "repeated": "Было!",
     "your_ships_map": "Карта ваших кораблей:",
     "opponent_ships_map": "Карта кораблей соперника:",
+    "enter_your_step": "Введите ваш ход(буква и цифра): ",
+    "invalid_input": "Недопустимый ввод!",
+    "invalid_letter": "Недопустимая буква!",
+    "incorrect_digit": "Некорректная цифра(число)!",
+    "digit_out_of_range": "Цифра(число) вне диапазона",
 }
 
 strings_en = {
@@ -35,5 +40,10 @@ strings_en = {
     "repeated": "It was!",
     "your_ships_map": "Your ships map:",
     "opponent_ships_map": "Opponent ships map:",
+    "enter_your_step": "Enter your step(letter and number): ",
+    "invalid_input": "Invalid input!",
+    "invalid_letter": "Invalid letter!",
+    "incorrect_digit": "Incorrect digit(number)!",
+    "digit_out_of_range": "Digit(number) is out of range",
 }
 

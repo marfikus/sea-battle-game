@@ -56,28 +56,29 @@ class Player:
         x = None
 
         while True:
-            val = input("Input your step(letter and number): ")
+            val = input(self.strings["enter_your_step"])
 
             if len(val) < 2:
-                print("Incorrect input!")
+                print(self.strings["invalid_input"])
                 continue
 
             if val[0].upper() in letters:
                 y = letters.index(val[0].upper())
             else:
-                print("Incorrect letter!")
+                print(self.strings["invalid_letter"])
                 continue
 
             try:
                 x = int(val[1:])
             except ValueError:
-                print("Incorrect number!")
+                print(self.strings["incorrect_digit"])
                 continue
 
             if min_value <= x <= max_value:
                 break
             else:
-                print(f"Number is out of range: {min_value}...{max_value}")
+                msg = self.strings["digit_out_of_range"]
+                print(f"{msg} {min_value}...{max_value}!")
 
         return y, x - 1
 

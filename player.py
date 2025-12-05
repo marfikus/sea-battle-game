@@ -43,8 +43,7 @@ class Player:
                 if m.add_ship(ship, y, x, orientation, True):
                     break
                 elif attempt == max_attempts - 1:
-                    print("Ship not added!")
-
+                    raise RuntimeError("Ship not added!")
         return m
 
 
@@ -103,7 +102,7 @@ class Player:
                     if content is None:
                         break
                     else:
-                        print("This point is already used!")
+                        print(self.strings["repeated"])
 
         elif self.type == PlayerType.COMPUTER:
             time.sleep(random.randint(2, 4))
